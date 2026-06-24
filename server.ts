@@ -12,16 +12,25 @@ import authRoutes from './server/routes/authRoutes.js';
 
 // Load environment variables
 const envPath = path.resolve(process.cwd(), '.env');
-const filePath = fileURLToPath(import.meta.url);
-const packageRootEnvPath = path.resolve(path.dirname(filePath), '.env');
+let packageRootEnvPath = '';
+try {
+  const metaUrl = import.meta.url;
+  if (metaUrl) {
+    packageRootEnvPath = path.resolve(path.dirname(fileURLToPath(metaUrl)), '.env');
+  } else if (typeof __dirname !== 'undefined') {
+    packageRootEnvPath = path.resolve(__dirname, '.env');
+  }
+} catch (e) {
+  // Ignored in bundled environments
+}
 
 const result = dotenv.config({ path: envPath });
 if (result.error) {
-  if (fs.existsSync(packageRootEnvPath)) {
+  if (packageRootEnvPath && fs.existsSync(packageRootEnvPath)) {
     dotenv.config({ path: packageRootEnvPath });
     console.log(`Loaded .env from ${packageRootEnvPath}`);
   } else {
-    console.warn(`No .env found at ${envPath} or ${packageRootEnvPath}`);
+    console.warn(`No .env found at ${envPath} or fallback path`);
   }
 }
 
