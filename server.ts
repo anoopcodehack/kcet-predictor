@@ -1,5 +1,7 @@
 import express from 'express';
+import fs from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'url';
 import { createServer as createViteServer } from 'vite';
 import dotenv from 'dotenv';
 import { connectDB } from './server/config/db.js';
@@ -9,7 +11,19 @@ import analyticsRoutes from './server/routes/analyticsRoutes.js';
 import authRoutes from './server/routes/authRoutes.js';
 
 // Load environment variables
-dotenv.config();
+const envPath = path.resolve(process.cwd(), '.env');
+const filePath = fileURLToPath(import.meta.url);
+const packageRootEnvPath = path.resolve(path.dirname(filePath), '.env');
+
+const result = dotenv.config({ path: envPath });
+if (result.error) {
+  if (fs.existsSync(packageRootEnvPath)) {
+    dotenv.config({ path: packageRootEnvPath });
+    console.log(`Loaded .env from ${packageRootEnvPath}`);
+  } else {
+    console.warn(`No .env found at ${envPath} or ${packageRootEnvPath}`);
+  }
+}
 
 async function startServer() {
   const app = express();
