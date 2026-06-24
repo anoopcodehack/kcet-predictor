@@ -165,7 +165,8 @@ Create a `.env` file inside the server folder.
 ```env
 PORT=5000
 
-MONGO_URI=your_mongodb_connection_string
+MONGODB_URI=your_mongodb_connection_string
+# MONGO_URI is also supported as an alias for compatibility
 
 JWT_SECRET=your_secret_key
 ```

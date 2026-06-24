@@ -55,9 +55,9 @@ export const SessionModel = mongoose.models.Session || mongoose.model('Session',
 let isMongoConnected = false;
 
 export async function connectDB() {
-  const uri = process.env.MONGODB_URI;
+  const uri = process.env.MONGODB_URI || process.env.MONGO_URI;
   if (!uri) {
-    console.log('No MONGODB_URI found in environment. Falling back to high-fidelity In-Memory Database Mode.');
+    console.log('No MongoDB connection URI found in environment. Falling back to high-fidelity In-Memory Database Mode.');
     return false;
   }
 
@@ -74,6 +74,7 @@ export async function connectDB() {
     return true;
   } catch (error) {
     console.error('Error connecting to MongoDB. Falling back to In-Memory Mode:', error);
+    console.error('Confirm your MongoDB URI and Atlas user/password are correct. Use MONGODB_URI or MONGO_URI.');
     isMongoConnected = false;
     return false;
   }
