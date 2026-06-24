@@ -1,0 +1,6 @@
+{
+  "name": "KCET Predictor",
+  "description": "High-fidelity KCET college predictor and cutoff analysis tool using a brutalist design system.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
